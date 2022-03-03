@@ -26,41 +26,9 @@ def seed_everything(seed):
     random.seed(seed)
 
 def get_lr(optimizer):
-    """ Returns learning rate initialized at optimizer
-    Args: 
-        opimizer: The optimizer included with nn.optim
-    """
     for param_group in optimizer.param_groups:
         return param_group['lr']
 
-def get_dataloader(dataset, train_idx, valid_idx, args):
-    """
-    Create a dataloader that bundles datasets into batch units
-    Args:
-        dataset: instances that inherit from nn.dataset.Dataset
-        train_dix: train index list
-        valid_idx: valid index list
-        args: initialized arguments
-    """
-    train_set = torch.utils.data.Subset(dataset, indices=train_idx)
-    val_set = torch.utils.data.Subset(dataset, indices=valid_idx)
-    
-    train_loader = torch.utils.data.DataLoader(
-        train_set,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        drop_last = True,
-        shuffle=True
-    )
-    val_loader = torch.utils.data.DataLoader(
-        val_set,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        drop_last=True,
-        shuffle=False
-    )
-
-    return train_loader, val_loader
 
 def increment_path(path, exist_ok=False):
     """ Automatically increment path, i.e. runs/exp --> runs/exp0, runs/exp1 etc.
@@ -78,16 +46,11 @@ def increment_path(path, exist_ok=False):
         n = max(i) + 1 if i else 2
         return f"{path}{n}"
 
+
+
 def k_fold_train(data_dir, model_dir, args):
-    """ start training model with K-Fold
-    Args:
-        data_dir: initialized dataset directory 
-        model_dir: initialized store path for model
-        args: initialized arguments
-    데이터 변조 train val 같음
-    """
-    s = "{:=^100}".format(" start k-fold training ")
-    print(s)
+
+    print('K_fold Train')
     seed_everything(args.seed)
 
     save_dir = increment_path(os.path.join(model_dir, args.name))
@@ -96,17 +59,15 @@ def k_fold_train(data_dir, model_dir, args):
     use_cuda = torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
 
-    # -- define single or multi model
     #task_list = None
     task_list =['multi']
    
     for task in task_list:
         
-        s = "{:=^100}".format(f" current task is: '{task}' ")
-        print(s)
+    
         # -- dataset
-        dataset_moduel = getattr(import_module("dataset"), args.dataset)
-        dataset = dataset_moduel(
+        dataset_module = getattr(import_module("dataset"), args.dataset)
+        dataset = dataset_module(
             data_dir = data_dir,
             class_by = None,
         )
@@ -122,7 +83,7 @@ def k_fold_train(data_dir, model_dir, args):
         )
         dataset.set_transform(transform)
 
-        # -- K-Fold
+        #--- k_fold
         accumulation_step = args.accumulation_step
         fold_module = getattr(import_module("sklearn.model_selection"), "StratifiedKFold")
         fold = fold_module(args.fold_nums)
@@ -131,11 +92,29 @@ def k_fold_train(data_dir, model_dir, args):
 
         for i, (train_idx, valid_idx) in enumerate(fold.split(dataset.image_paths, labels)): # loop for K-Fold
             
-            s = "{:=^100}".format(f" k-fold: {i}/{args.fold_nums} ")
-            print(s)
+           
+            print(f"k_fold  :  {i}/{args.fold_nums} ")
+            
+            
             # -- data_loader
-            train_loader, val_loader = get_dataloader(dataset, train_idx, valid_idx, args)
-
+            ## train
+            train_set = torch.utils.data.Subset(dataset, indices=train_idx)
+            train_loader = torch.utils.data.DataLoader(
+                            train_set,
+                            batch_size=args.batch_size,
+                            num_workers=args.num_workers,
+                            drop_last = True,
+                            shuffle=True
+                                )
+            ## validation
+            val_set = torch.utils.data.Subset(dataset, indices=valid_idx)
+            val_loader = torch.utils.data.DataLoader(
+                            val_set,
+                            batch_size=args.batch_size,
+                            num_workers=args.num_workers,
+                            drop_last = True,
+                            shuffle=True
+                                )
             # -- model
             model_module = import_module("model")
             model = model_module.get_model(args.model, num_classes).to(device)
@@ -250,7 +229,7 @@ def k_fold_train(data_dir, model_dir, args):
                         cnt = 0
                         break
 
-def general_train(data_dir, model_dir, args):
+def base_train(data_dir, model_dir, args):
     
     '''
     k - fold 사용 안함 
@@ -258,9 +237,7 @@ def general_train(data_dir, model_dir, args):
     Train / Val 데이터셋 augemention 다름
     '''
 
-    s = "{:=^100}".format(" start general training ")
-    print(s)
-    
+    print('Start Base")
     seed_everything(args.seed)
     
     save_dir = increment_path(os.path.join(model_dir, args.name))
@@ -457,15 +434,15 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=2e-4, help='learning rate (default: 1e-4)')
     parser.add_argument('--optimizer', type=str, default='Adam', help='optimizer type (default: Adam)')
     parser.add_argument('--criterion', type=str, default='ce', help='criterion type (default: CrossEntropy)')
-    parser.add_argument('--scheduler', type=str, default='StepLR', help='scheduler type (default: StepLR)')
+   # parser.add_argument('--scheduler', type=str, default='StepLR', help='scheduler type (default: StepLR)')
     parser.add_argument('--lr_decay_step', type=int, default=2, help='learning rate scheduler deacy step (default: 5)')
 
     # K-Fold 사용시 변수
-    parser.add_argument('--k_fold', default=False, action='store_true', help='selecting wether apply k-fold or not (default: False)')
+    parser.add_argument('--k_fold', default=True, action='store_true', help='selecting wether apply k-fold or not (default: False)')
     parser.add_argument('--fold_nums', type=int, default=5, help='how many folds (default: 5)')
     parser.add_argument('--accumulation_step', type=int, default=2, help='loss grad step (default:2)')
     
-    # Container 경로
+    # Container Env 경로
     parser.add_argument('--name', default='trial', help='model save at {SM_MODEL_DIR}/{name}')
     parser.add_argument('--data_dir', type=str, default=os.environ.get('SM_CHANNEL_TRAIN', '/opt/ml/input/data/train/images'))
     parser.add_argument('--test_dir', type=str, default=os.environ.get('SM_CHANNEL_TEST', '/opt/ml/input/data/eval/images'))
@@ -483,8 +460,6 @@ if __name__ == '__main__':
     model_dir = args.model_dir
     torch.cuda.empty_cache()
     
-    # K fold, general
-    if args.k_fold:
-        k_fold_train(data_dir, model_dir, args)
-    else:
-        general_train(data_dir, model_dir, args)
+    # K fold
+    k_fold_train(data_dir, model_dir, args)
+    #base_train(data_dir, model_dir, args)

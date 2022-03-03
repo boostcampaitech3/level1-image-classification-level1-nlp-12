@@ -12,13 +12,6 @@ from efficientnet_pytorch import EfficientNet
 def resnet152(classes):
     resnet152 = torchvision.models.resnet152(pretrained=True)
     resnet152.fc = nn.Linear(in_features=2048, out_features=classes, bias=True)
-    
-    nn.init.xavier_uniform_(resnet152.conv1.weight)
-    nn.init.xavier_uniform_(resnet152.fc.weight)
-    
-    stdv = 1.0/np.sqrt(classes)
-    resnet152.fc.bias.data.uniform_(-stdv, stdv)
-    
     return resnet152
 
 
