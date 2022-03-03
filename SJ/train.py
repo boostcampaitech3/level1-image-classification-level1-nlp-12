@@ -220,10 +220,9 @@ def k_fold_train(data_dir, model_dir, args):
                         f"best  val f1 : {best_val_f1:4.2%} || "
                         f"training-f1 {val_f1:.4f}"
                     )
-                    
-                    # --early stop (default : 3)
-                    if args.early_stop and cnt == args.patience:
-                        print("early stopping")
+                                  
+                    if cnt == 3:
+                        print("Stop!")
                         print(f"best f1: {best_val_f1:4.2%}") 
                         cnt = 0
                         break
@@ -246,7 +245,12 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='efficientnet_b4', help='model type (default: efficientnet_b4)')
     parser.add_argument('--val_ratio', type=float, default=0.2, help='ratio for validaton (default: 0.2)')
     parser.add_argument('--log_interval', type=int, default=20, help='how many batches to wait before logging training status')
+    parser.add_argument('--num_workers', type=int, default=4, help='num worker for dataloader (default: 4)')
 
+    # K-Fold 변수
+    parser.add_argument('--fold_nums', type=int, default=5, help='how many folds (default: 5)')
+    parser.add_argument('--accumulation_step', type=int, default=2, help='loss grad step (default:2)')
+    
     # Loss & Metrix 하이퍼파라미터
     parser.add_argument('--lr', type=float, default=2e-4, help='learning rate (default: 1e-4)')
     parser.add_argument('--optimizer', type=str, default='Adam', help='optimizer type (default: Adam)')
@@ -254,21 +258,13 @@ if __name__ == '__main__':
    # parser.add_argument('--scheduler', type=str, default='StepLR', help='scheduler type (default: StepLR)')
     parser.add_argument('--lr_decay_step', type=int, default=2, help='learning rate scheduler deacy step (default: 5)')
 
-    # K-Fold 사용시 변수
-    parser.add_argument('--k_fold', default=True, action='store_true', help='selecting wether apply k-fold or not (default: False)')
-    parser.add_argument('--fold_nums', type=int, default=5, help='how many folds (default: 5)')
-    parser.add_argument('--accumulation_step', type=int, default=2, help='loss grad step (default:2)')
-    
-    # Container Env 경로
+    # 경로
     parser.add_argument('--name', default='trial', help='model save at {SM_MODEL_DIR}/{name}')
     parser.add_argument('--data_dir', type=str, default=os.environ.get('SM_CHANNEL_TRAIN', '/opt/ml/input/data/train/images'))
     parser.add_argument('--test_dir', type=str, default=os.environ.get('SM_CHANNEL_TEST', '/opt/ml/input/data/eval/images'))
     parser.add_argument('--model_dir', type=str, default=os.environ.get('SM_MODEL_DIR', './model'))
 
-    # ETC 그외 (patience ==> 몇번 봐줄건지 epoch당 달라질것 같긴한데 1/4-1/5이면 적당한거 같다)
-    parser.add_argument('--early_stop', default=True, action='store_false', help='early stopping (default: True)')
-    parser.add_argument('--patience', type=int, default=3, help='variable for early stopping (default:3)') 
-    parser.add_argument('--num_workers', type=int, default=4, help='num worker for dataloader (default: 4)')
+  
 
     args = parser.parse_args()
     print(args)
