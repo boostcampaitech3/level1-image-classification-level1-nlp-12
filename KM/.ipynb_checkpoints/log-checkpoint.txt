@@ -1,0 +1,74 @@
+Basic code (epochs 1)
+validation accuracy : 38.78 
+
+resnet18 (epochs 5)
+validation accuracy : 63.36
+
+resnet18 (epochs 5) + Freeze
+validation accuracy : 38.52
+
+resnet18 (epochs 20) + ConsineAnnelaingLR + f1loss
+validation accuracy : 48.68
+
+resnet18 (epochs 100) + ConsineAnnelaingLR + f1loss
+validation accuracy : 64.50
+aistage server accuracy : 42.28
+aistage server f1 score : 35.95
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified)
+validation accuracy : 65.78
+aistage server accuracy : 43
+aistage server f1 score : 29.86
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR + f1loss
+validation accuracy : 26.46
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR + focal loss
+validation accuracy : 65.60
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR + labelSmoothing loss
+validation accuracy : 65.72
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR + Weighted Random Sampling
+validation accuracy : 61.39
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR + Weighted Random Sampling + f1loss
+validation accuracy : 15.13
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ExponentialLR
+validation accuracy : 54.19
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + MultiStepLR
+validation accuracy : 65.78
+
+resnet18 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + Weighted Random Sampling
+validation accuracy : 61.45
+
+
+
+resnet50 (epochs 5) + freeze + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR
+validation accuracy : 43.71
+aistage server accuracy : 28.9
+aistage server f1 score : 0.1
+
+resnet50 (epochs 5) + MaskSplitByProfileDataset(Not Modified) + ConsineAnnelaingLR
+validation accuracy : 69.79
+aistage server accuracy : 48.98
+aistage server f1 score : 34
+
+resnet50 (epochs 4) + MaskSplitByProfileDataset(Modified) + ConsineAnnelaingLR
+validation accuracy : 58.28
+aistage server accuracy : 43.38
+aistage server f1 score : 28.18
+
+resnet50 (epochs 20) + MaskSplitByProfileDataset(Modified) + ConsineAnnelaingLR
+validation accuracy : 66.11
+aistage server accuracy : 53
+aistage server f1 score : 44
+
+resnet50 (epochs 20) + MaskSplitByProfileDataset(Modified) + ConsineAnnelaingLR +  Weighted Random Sampling
+validation accuracy : 64.36
+aistage server accuracy : 49
+aistage server f1 score : 44
+
+
