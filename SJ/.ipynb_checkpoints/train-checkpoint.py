@@ -47,7 +47,6 @@ def increment_path(path, exist_ok=False):
         return f"{path}{n}"
 
 
-
 def k_fold_train(data_dir, model_dir, args):
 
     print('K_fold Train')
@@ -228,190 +227,8 @@ def k_fold_train(data_dir, model_dir, args):
                         print(f"best f1: {best_val_f1:4.2%}") 
                         cnt = 0
                         break
-
-def base_train(data_dir, model_dir, args):
-    
-    '''
-    k - fold 사용 안함 
-    args= Criterion, Optimizer
-    Train / Val 데이터셋 augemention 다름
-    '''
-
-    print('Start Base")
-    seed_everything(args.seed)
-    
-    save_dir = increment_path(os.path.join(model_dir, args.name))
-
-    # -- settings
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda" if use_cuda else "cpu")
-
-    task_list = None
-    task_list = ['multi']
-
-    for task in task_list:
-
-        # -- dataset
-        dataset_module = getattr(import_module("dataset"), args.dataset) # default: MaskSplitByProfileDataset
-        dataset = dataset_module(
-            data_dir = data_dir,
-            class_by = None, 
-        )
-        num_classes = dataset.num_classes
-        
-        # -- augmentation
-        transform_module = getattr(import_module("dataset"), args.augmentation) # default: CustomAugmentaion
-        transform_train = transform_module(
-            'train',
-            resize = args.resize,
-            mean = dataset.mean,
-            std = dataset.std,
-        )
-        transform_val = transform_module(
-            'val',
-            resize = args.resize,
-            mean = dataset.mean,
-            std = dataset.std,
-        )
-        train_set, val_set = dataset.split_dataset()
-        train_set.dataset.set_transform(transform_train)
-        val_set.dataset.set_transform(transform_val)
-        #dataset.set_transform(transform)
-
-        # -- data_loader   
-
-        train_loader = DataLoader(
-            train_set,
-            batch_size=args.batch_size,
-            num_workers=args.num_workers,
-            shuffle=True,
-            pin_memory=use_cuda,
-            drop_last=True,
-        )
-
-        val_loader = DataLoader(
-            val_set,
-            batch_size=args.batch_size,
-            num_workers=args.num_workers,
-            shuffle=True, # False
-            pin_memory=use_cuda,
-            drop_last=True,
-        )
-
-        # -- model
-        model_module = import_module("model") 
-        model = model_module.get_model(args.model, num_classes).to(device)
-        #model = torch.nn.DataParallel(model)
-
-        # -- loss & metric
-        criterion = import_module("loss").create_criterion(args.criterion)
-        opt_module = getattr(import_module("torch.optim"), args.optimizer)
-        optimizer = opt_module( 
-            model.parameters(),
-            lr=args.lr,
-            #momentum=0.9,
-            weight_decay=2e-4,
-        )
-
-        scheduler = StepLR(optimizer, args.lr_decay_step, gamma=0.5)
-
-        # -- logging
-        logger = SummaryWriter(log_dir=save_dir)
-        with open(os.path.join(save_dir, "config.json"), 'w', encoding='utf-8') as f:
-            json.dump(vars(args), f, ensure_ascii=False, indent=4)
-        
-        # -- training  
-        best_val_f1 = 0
-        best_val_loss = np.inf
-        counter = 0
-        for epoch in range(args.epochs):
-
-            # train loop
-            model.train()
-            loss_value = 0
-            matches = 0
-            for idx, train_batch in enumerate(train_loader):
-                inputs, labels = train_batch
-                inputs = inputs.to(device)
-                labels = labels.to(device)
-
-                optimizer.zero_grad()
-
-                outs = model(inputs)
-                preds = torch.argmax(outs, dim=-1)
-                loss = criterion(outs, labels)
-
-                loss.backward()
-                optimizer.step()
-
-                loss_value += loss.item()
-                matches += (preds == labels).sum().item()
-                if (idx + 1)% args.log_interval == 0:
-                    train_loss = loss_value / args.log_interval
-                    train_acc = matches / args.batch_size / args.log_interval
-                    current_lr = get_lr(optimizer)
-                    print(
-                        f"Epoch[{epoch}/{args.epochs}]({idx + 1}/{len(train_loader)}) || "
-                        f"training loss {train_loss:4.4} || training accuracy {train_acc:4.2%} || lr {current_lr}"
-                    )
-                    logger.add_scalar("Train/loss", train_loss, epoch * len(train_loader) + idx)
-                    logger.add_scalar("Train/accuracy", train_acc, epoch * len(train_loader) + idx)
-
-                    loss_value = 0
-                    matches = 0
-
-            scheduler.step()
-
-            # val loop
-            with torch.no_grad():
-                print("Calculating validation results...")
-                model.eval()
-                val_loss_items = []
-                val_acc_items = []
-                val_f1_itmes= 0
-
-                for val_batch in val_loader:
-                    inputs, labels = val_batch
-                    inputs = inputs.to(device)
-                    labels = labels.to(device)
-
-                    outs = model(inputs)
-                    preds = torch.argmax(outs, dim=-1)
-
-                    loss_item = criterion(outs, labels).item()
-                    acc_item = (labels == preds).sum().item()
-                    val_loss_items.append(loss_item)
-                    val_acc_items.append(acc_item)
-                    val_f1_itmes += f1_score(labels.cpu().numpy(),preds.cpu().numpy(),average='macro')
-
-                val_loss = np.sum(val_loss_items) / len(val_loader)
-                val_acc = np.sum(val_acc_items) / len(val_set)
-                best_val_loss = min(best_val_loss, val_loss)
-
-                val_f1 = val_f1_itmes / len(val_loader)
-                
-                if val_f1 > best_val_f1:
-                    best_val_f1 = val_f1
-                    print(f"New best model for val accuracy ! : {val_f1:4.2%} saving the best model ...")
-                    torch.save(model, f"{save_dir}/00_{epoch:02}_{val_acc:4.2%}_{val_f1:4.2}.pt")
-                    cnt = 0
-                else:
-                    cnt += 1
-
-                print(
-                    f"current val acc : {val_acc:4.2%}, loss: {val_loss:4.2} || "
-                    f"best  val acc : {best_val_acc:4.2%} || "
-                    f"training-f1 {val_f1:.4f}"
-                )
-                
-                # Early Stop (defaul :3)
-                if args.early_stop and cnt >= args.patience:
-                    print("early stopping")
-                    print(f"best acc: {best_val_f1:4.2%}") 
-                    cnt = 0
-                    break
-            
-
+                        
+                        
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
@@ -462,4 +279,4 @@ if __name__ == '__main__':
     
     # K fold
     k_fold_train(data_dir, model_dir, args)
-    #base_train(data_dir, model_dir, args)
+    #train(data_dir, model_dir, args)
