@@ -29,7 +29,7 @@ level1-image-classification-level1-nlp-12 created by GitHub Classroom
 
 
 #### Project Tree
-
+```bash
 level1-image-classification-level1-nlp-12
 ├── EDA
 │   ├── 001_Data_Analysis.ipynb
@@ -45,3 +45,4 @@ level1-image-classification-level1-nlp-12
 ├── project_tree.txt
 ├── requirments.txt
 └── train.py
+```
