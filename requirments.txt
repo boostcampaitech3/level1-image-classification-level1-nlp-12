@@ -1,7 +1,10 @@
 absl-py==0.13.0
+aiohttp==3.8.1
+aiosignal==1.2.0
 albumentations==1.1.0
 anyio==3.3.0
 argon2-cffi==20.1.0
+async-timeout==4.0.2
 attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1640799537051/work
 Babel==2.9.1
 backcall==0.2.0
@@ -15,6 +18,7 @@ cachetools==4.2.2
 certifi==2021.10.8
 cffi @ file:///home/conda/feedstock_root/build_artifacts/cffi_1636046063618/work
 chardet @ file:///tmp/build/80754af9/chardet_1605303185383/work
+charset-normalizer==2.0.12
 click==8.0.4
 conda==4.11.0
 conda-build==3.21.4
@@ -30,6 +34,9 @@ efficientnet-pytorch==0.7.1
 entrypoints @ file:///home/conda/feedstock_root/build_artifacts/entrypoints_1643888246732/work
 facenet-pytorch==2.5.2
 filelock @ file:///home/linux1/recipes/ci/filelock_1610993975404/work
+frozenlist==1.3.0
+fsspec==2022.2.0
+future==0.18.2
 gevent==21.8.0
 gitdb==4.0.9
 GitPython==3.1.27
@@ -71,6 +78,7 @@ mistune @ file:///home/conda/feedstock_root/build_artifacts/mistune_160511565187
 mkl-fft==1.2.0
 mkl-random==1.1.1
 mkl-service==2.3.0
+multidict==6.0.2
 nbclassic==0.3.1
 nbclient==0.5.4
 nbconvert==6.1.0
@@ -103,6 +111,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycosat==0.6.3
 pycparser @ file:///tmp/build/80754af9/pycparser_1594388511720/work
+pyDeprecate==0.3.1
 Pygments @ file:///tmp/build/80754af9/pygments_1610565767015/work
 PyNaCl==1.4.0
 pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1605545627475/work
@@ -111,6 +120,8 @@ pyrsistent @ file:///tmp/build/80754af9/pyrsistent_1636110947380/work
 PySocks @ file:///tmp/build/80754af9/pysocks_1605305779399/work
 python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
 python-etcd==0.4.5
+pytorch-ignite==0.4.8
+pytorch-lightning==1.5.10
 pytz @ file:///tmp/build/80754af9/pytz_1608922264688/work
 PyWavelets==1.2.0
 PyYAML==5.3.1
@@ -144,6 +155,7 @@ tifffile==2022.2.9
 timm==0.5.4
 torch==1.7.1
 torchelastic==0.2.1
+torchmetrics==0.7.2
 torchsummary==1.5.1
 torchvision==0.8.2
 tornado @ file:///home/conda/feedstock_root/build_artifacts/tornado_1604105045397/work
@@ -157,6 +169,7 @@ webencodings==0.5.1
 websocket-client==1.2.1
 Werkzeug==2.0.1
 widgetsnbextension @ file:///home/conda/feedstock_root/build_artifacts/widgetsnbextension_1637174139311/work
+yarl==1.7.2
 yaspin==2.1.0
 zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1643828507773/work
 zope.event==4.5.0
