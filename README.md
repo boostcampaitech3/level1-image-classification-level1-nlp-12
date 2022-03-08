@@ -28,3 +28,20 @@ level1-image-classification-level1-nlp-12 created by GitHub Classroom
 9. 끝!
 
 
+#### Project Tree
+
+level1-image-classification-level1-nlp-12
+├── EDA
+│   ├── 001_Data_Analysis.ipynb
+│   ├── 002_Image_Blend.ipynb
+│   ├── 003_wideResnet50Model.ipynb
+│   ├── EDA_001.ipynb
+│   └── README.md
+├── README.md
+├── dataset.py
+├── inference.py
+├── loss.py
+├── model.py
+├── project_tree.txt
+├── requirments.txt
+└── train.py
