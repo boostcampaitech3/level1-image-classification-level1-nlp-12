@@ -21,7 +21,7 @@
 ![img](./material/ProjectDevelopmentProcess.png)
 
 #### Model Summary
-    처음에는 VGG19와 Resnet18, Resnet50을 사용하였으나, 더 높은 성능을 위해 최종적으로는 EfficientNet-b4를 사용하게 되었다
+- 처음에는 VGG19와 Resnet18, Resnet50을 사용하였으나, 더 높은 성능을 위해 최종적으로는 EfficientNet-b4를 사용하게 되었다
 
 #### Model Selection and Analysis
 ![img](./material/ModelSummary.png)
