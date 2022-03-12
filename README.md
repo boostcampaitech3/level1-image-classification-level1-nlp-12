@@ -19,7 +19,7 @@
     개발 환경(IDE) : Jupyter notebook, VSCode, PyCharm 등
     협업 및 기타 Tool : Github, Notion, Zoom, TensorBoard, wandb
 
-### Project Development Process
+### :pushpin: Project Development Process :pushpin:
 <p align="center"> 
     <img src = "./material/ProjectDevelopmentProcess.png">
 </p>
