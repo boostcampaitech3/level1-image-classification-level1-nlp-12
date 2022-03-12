@@ -1,6 +1,4 @@
-# :hatching_chick: Level1 - Image Classification :hatching_chick:
 ##  :penguin: 자, 연어 한접시's First P-Stage Project :penguin:
-
 부스트 캠프 AI Tech 3기 12조의 마스크 착용 상태 분류 프로젝트
 
 ## :mag_right: Overview
@@ -15,8 +13,8 @@
 ![img](./material/class.png)
 
 ### Development Environment
-    HW : aistage에서 제공하는 서버 및 GPU(Tesla V100)
-    IDE : Jupyter notebook, VSCode, PyCharm 등
+    개발환경(Hardware) : aistage에서 제공하는 서버 및 GPU(Tesla V100)
+    개발환경(IDE) : Jupyter notebook, VSCode, PyCharm 등
     협업 및 기타 Tool : Github, Notion, Zoom, TensorBoard, wandb
 
 #### Project Tree
