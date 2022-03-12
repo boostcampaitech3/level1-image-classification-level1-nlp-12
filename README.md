@@ -20,18 +20,18 @@
 ### Project Development Process
 ![img](./material/ProjectDevelopmentProcess.png)
 
-    - Model Summary
+- Model Summary
     처음에는 VGG19와 Resnet18, Resnet50을 사용하였으나, 더 높은 성능을 위해 최종적으로는 EfficientNet-b4를 사용하게 되었다
 
-    - Model Selection and Analysis
+- Model Selection and Analysis
 ![img](./material/ModelSummary.png).
 
-    - Model Evaluation and Improvements
-    이미지를 학습시키고 inference 과정을 거칠 때 이미지의 크기에 따라 속도가 차이가 있음을 알게 되었습니다. 이미지를 CenterCrop을 사용해 가장자리 일부분을 자라내고 resize과정을 통해 crop된 이미지 사이즈의 80% 크기를 줄여 학습/확인 과정을 거쳤습니다.
+- Model Evaluation and Improvements
+이미지를 학습시키고 inference 과정을 거칠 때 이미지의 크기에 따라 속도가 차이가 있음을 알게 되었습니다. 이미지를 CenterCrop을 사용해 가장자리 일부분을 자라내고 resize과정을 통해 crop된 이미지 사이즈의 80% 크기를 줄여 학습/확인 과정을 거쳤습니다.
 
-    이미지 학습 시 데이터에 noise를 주는 것이 학습에 효과적일 것이라고 생각했습니다. Horizontal Flip, ColorJitter, Random Brightness 등 여러 Augmentation을 활용하여 Over Sampling과 Under Sampling 등을 시도하였으나 오히려 성능이 낮아지는 것을 확인할 수 있었습니다. 최종 제출 모델에서 모델에서 가장 기본적인 Augmentation을 적용함으로써 0.04 정도의 성능 향상을 이루었습니다.
+- 이미지 학습 시 데이터에 noise를 주는 것이 학습에 효과적일 것이라고 생각했습니다. Horizontal Flip, ColorJitter, Random Brightness 등 여러 Augmentation을 활용하여 Over Sampling과 Under Sampling 등을 시도하였으나 오히려 성능이 낮아지는 것을 확인할 수 있었습니다. 최종 제출 모델에서 모델에서 가장 기본적인 Augmentation을 적용함으로써 0.04 정도의 성능 향상을 이루었습니다.
 
-    모델의 학습 과정을 살펴본 결과 Mask와 Gender 판별에는 큰 문제가 없었으나, Age를 판단하는 과정에서 이슈가 있었습니다. 특정 연령대의 데이터 불균형을 원인으로 판단하였습니다. 최종적으로 나이에 대한 기준을 다르게 두어서 특정 연령대의 데이터 불균형 이슈를 조금은 완화 시킬 수 있었습니다. 
+- 모델의 학습 과정을 살펴본 결과 Mask와 Gender 판별에는 큰 문제가 없었으나, Age를 판단하는 과정에서 이슈가 있었습니다. 특정 연령대의 데이터 불균형을 원인으로 판단하였습니다. 최종적으로 나이에 대한 기준을 다르게 두어서 특정 연령대의 데이터 불균형 이슈를 조금은 완화 시킬 수 있었습니다. 
 
 ### Project Tree
 ```bash
