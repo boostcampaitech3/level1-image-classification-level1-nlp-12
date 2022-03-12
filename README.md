@@ -10,7 +10,9 @@
 
 ### Problem definition
 > (384, 512) 사람 이미지가 주어지면 나이, 성별, 마스크 착용 여부에 따라 18개의 클래스로 Classification 하는 모델 구현
-![img](./material/class.png)
+<p align="center"> 
+    <img src = "../material/class.png">
+</p>
 
 ### Development Environment
     개발 환경(Hardware) : aistage에서 제공하는 서버 및 GPU(Tesla V100)
@@ -18,13 +20,17 @@
     협업 및 기타 Tool : Github, Notion, Zoom, TensorBoard, wandb
 
 ### Project Development Process
-![img](./material/ProjectDevelopmentProcess.png)
+<p align="center"> 
+    <img src = "./material/ProjectDevelopmentProcess.png">
+</p>
 
 #### Model Summary
 - 처음에는 VGG19와 Resnet18, Resnet50을 사용하였으나, 더 높은 성능을 위해 최종적으로는 EfficientNet-b4를 사용하게 되었다
 
 #### Model Selection and Analysis
-![img](./material/ModelSummary.png)
+<p align="center"> 
+    <img src = "./material/ModelSummary.png">
+</p>
 
 #### Model Evaluation and Improvements
 - 이미지를 학습시키고 inference 과정을 거칠 때 이미지의 크기에 따라 속도가 차이가 있음을 알게 되었습니다. 이미지를 CenterCrop을 사용해 가장자리 일부분을 자라내고 resize과정을 통해 crop된 이미지 사이즈의 80% 크기를 줄여 학습/확인 과정을 거쳤습니다.
