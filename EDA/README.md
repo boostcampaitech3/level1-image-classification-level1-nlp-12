@@ -1,5 +1,3 @@
-# Image Classification 대회
-
 ### EDA (Exploratory Data Analysis)
 - 수집한 데이터가 들어왔을 때, 이를 다양한 각도에서 관찰하고 이해하는 과정이다. 한마디로 데이터를 분석하기 전에 그래프나 통계적인 방법으로 자료를 직관적으로 바라보는 과정. 
 
