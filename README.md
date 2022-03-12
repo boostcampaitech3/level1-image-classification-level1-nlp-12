@@ -11,7 +11,7 @@
 ### Problem definition
 > (384, 512) 사람 이미지가 주어지면 나이, 성별, 마스크 착용 여부에 따라 18개의 클래스로 Classification 하는 모델 구현
 <p align="center"> 
-    <img src = "./material/class.png">
+    <img src = "./material/class.png" height="400px" width="300px">
 </p>
 
 ### Development Environment
